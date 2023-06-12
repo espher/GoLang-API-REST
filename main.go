@@ -10,6 +10,7 @@ import (
 	"github.com/espher/GoLang-API-REST/db"
 	"github.com/espher/GoLang-API-REST/models"
 	"github.com/espher/GoLang-API-REST/routes"
+	"github.com/espher/GoLang-API-REST/sqs"
 )
 
 func main() {
@@ -19,6 +20,8 @@ func main() {
 	if err != nil {
 		log.Fatal("Failed to run databases:", err)
 	}
+
+	sqs.GetQueueList()
 
 	router := gin.Default()
 	routes.SetupRoutes(router)

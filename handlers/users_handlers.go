@@ -89,7 +89,7 @@ func (uh *UsersHandler) CreateUser(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, user)
+	c.JSON(http.StatusCreated, result)
 
 }
 

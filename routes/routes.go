@@ -17,6 +17,11 @@ func SetupRoutes(router *gin.Engine) {
 	router.PUT("/users/:id", usersRouter.UpdateUser)
 	router.DELETE("/users/:id", usersRouter.DeleteUser)
 
+	loginHandler := handlers.LoginHandlerRoueter(usersRouter)
+	router.POST("/login", loginHandler.LoginUser)
+	router.POST("/logout", loginHandler.LogoutUser)
+	router.GET("/check-area", middlewares.RequireAuth, loginHandler.CheckLogin)
+
 	// Posts Routes
 	postsRouter := handlers.PostsRouter(db.DB)
 	router.GET("/posts", postsRouter.GetPosts)
@@ -25,10 +30,15 @@ func SetupRoutes(router *gin.Engine) {
 	router.PUT("/posts/:id", postsRouter.UpdatePost)
 	router.DELETE("/posts/:id", postsRouter.DeletePost)
 
-	loginHandler := handlers.LoginHandlerRoueter(usersRouter)
-	router.POST("/login", loginHandler.LoginUser)
-	router.POST("/logout", loginHandler.LogoutUser)
-	router.GET("/check-area", middlewares.RequireAuth, loginHandler.CheckLogin)
+	//SQS
+	sqsRouter := handlers.SQSRouter(db.DB)
+	router.GET("/aws/messages", sqsRouter.GetMessages)
+	router.POST("/aws/messages", sqsRouter.CreateMessage)
+	router.POST("/aws/messages/bulk", sqsRouter.CreateMessageBulk)
+
+	//Scraper
+	scraperRouter := handlers.ScraperHandlerRouter(db.DB)
+	router.POST("/scrape/product", scraperRouter.DoScrapeProduct)
 
 	//General Routes
 	router.GET("/", func(c *gin.Context) {
