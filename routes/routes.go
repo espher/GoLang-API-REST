@@ -39,6 +39,7 @@ func SetupRoutes(router *gin.Engine) {
 	//Scraper
 	scraperRouter := handlers.ScraperHandlerRouter(db.DB)
 	router.POST("/scrape/product", scraperRouter.DoScrapeProduct)
+	router.POST("/scrape/car", scraperRouter.DoScrapeCar)
 
 	//General Routes
 	router.GET("/", func(c *gin.Context) {
